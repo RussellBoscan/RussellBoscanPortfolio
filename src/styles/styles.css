@@ -1,0 +1,540 @@
+/**
+ * DOCUMENTATION & COLOR PALETTE
+ * Palette taken from Color Hunt: https://colorhunt.co/palette/1b262c0f4c753282b8bbe1fa
+ * 
+ * --bg-primary:    #1B262C (Primary background color)
+ * --bg-secondary:  #0F4C75 (Secondary background & Card background)
+ * --color-tertiary:#3282B8 (Hover states, timeline markers, interactive accents)
+ * --color-fourth:  #BBE1FA (Active navbar section indicators, highlights)
+ * --color-text:    #FFFFFF (Global website typography color)
+ */
+
+:root {
+    /* Color Palette */
+    --bg-primary: #1B262C;
+    --bg-secondary: #0F4C75;
+    --color-tertiary: #3282B8;
+    --color-fourth: #BBE1FA;
+    --color-text: #FFFFFF;
+
+    /* Typography */
+    --font-main: 'Montserrat', sans-serif;
+    --font-regular: 400;
+    --font-bold: 700;
+
+    /* Layout & Transitions */
+    --nav-height: 70px;
+    --nav-width-landscape: 90px;
+    --transition-speed: 0.25s;
+}
+
+/* ==========================================
+   RESET & GLOBAL STYLES
+   ========================================== */
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+html {
+    /* Preserves default scroll speed while enabling smooth anchor jumps */
+    scroll-behavior: smooth;
+}
+
+body {
+    font-family: var(--font-main);
+    font-weight: var(--font-regular);
+    color: var(--color-text);
+    background-color: var(--bg-primary);
+    line-height: 1.6;
+    overflow-x: hidden;
+}
+
+h1, h2, h3, h4 {
+    font-weight: var(--font-bold);
+    line-height: 1.2;
+    margin-bottom: 1rem;
+}
+
+a {
+    color: inherit;
+    text-decoration: none;
+    text-shadow: 0 0 10px rgba(255, 255, 255, 0.5); /* Subtle glow for better visibility on dark backgrounds */
+}
+
+/* ==========================================
+   NAVIGATION BAR (DEFAULT: TOP STICKY)
+   ========================================== */
+.navbar {
+    position: sticky;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: var(--nav-height);
+    background-color: color(from var(--bg-primary) srgb r g b / 0.30);
+    backdrop-filter: blur(5px);
+    z-index: 1000;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.nav-container {
+    position: relative;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 2rem;
+    width: 100%;
+    max-width: 1200px;
+    padding: 0 1rem;
+}
+
+.nav-link {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.5rem 1rem;
+    position: relative;
+    font-weight: var(--font-regular);
+    transition: color var(--transition-speed) ease-in-out;
+}
+
+.nav-link .material-symbols-outlined {
+    font-size: 1.5rem;
+    transition: color var(--transition-speed) ease-in-out;
+}
+
+/* Hover Effect: Fade in/out to Tertiary Color */
+.nav-link:hover,
+.nav-link:hover .material-symbols-outlined {
+    color: var(--color-tertiary);
+}
+
+/* Active Section Indicator (Default: Bottom Underline) */
+.nav-indicator {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    height: 3px;
+    background-color: var(--color-fourth);
+    transition: all var(--transition-speed) ease-in-out;
+    pointer-events: none;
+}
+/* ==========================================
+   SECTIONS & LAYOUT
+   ========================================== */
+.section {
+    padding: 5rem 2rem;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.section-primary {
+    background-color: var(--bg-primary);
+}
+
+.section-secondary {
+    background-color: var(--bg-secondary);
+}
+
+.section-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    width: 100%;
+}
+
+.section-title {
+    font-size: 2.5rem;
+    margin-bottom: 2rem;
+    position: relative;
+}
+
+/* ==========================================
+   ABOUT ME SECTION
+   ========================================== */
+
+#about {
+    --dot-bg: var(--bg-primary);
+    
+    --dot-color: white;
+    
+    /* Dot dimensions */
+    --dot-size: 1px;
+    --dot-space: 22px;
+
+    /* The layered gradient pattern */
+    background:
+        linear-gradient(90deg, var(--dot-bg) calc(var(--dot-space) - var(--dot-size)), transparent 1%) center / var(--dot-space) var(--dot-space),
+        linear-gradient(var(--dot-bg) calc(var(--dot-space) - var(--dot-size)), transparent 1%) center / var(--dot-space) var(--dot-space),
+        var(--dot-color);
+}
+
+.about-grid {
+    display: flex;
+    align-items: center;
+    gap: 3rem;
+}
+
+.about-avatar-col {
+    flex: 0 0 25%;
+    display: flex;
+    justify-content: center;
+}
+
+.about-text-col {
+    flex: 0 0 75%;
+}
+
+.avatar-circle {
+    width: 100%;
+    max-width: 220px;
+    aspect-ratio: 1 / 1;
+    border-radius: 50%;
+    background-color: var(--color-tertiary);
+    border: 4px solid var(--color-fourth);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+}
+
+.avatar-icon {
+    font-size: 5rem !important;
+    color: var(--color-text);
+}
+
+.avatar-img {
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;  
+  object-fit: cover;  
+  display: block;
+}
+
+.section-description {
+    font-size: 1.1rem;
+    opacity: 0.95;
+}
+
+/* ==========================================
+   EXPERIENCE SECTION
+   ========================================== */
+
+.timeline {
+    position: relative;
+    border-left: 3px solid var(--color-tertiary);
+    margin-left: 1rem;
+    padding-left: 2rem;
+    display: flex;
+    flex-direction: column;
+    gap: 2.5rem;
+}
+
+.timeline-item {
+    position: relative;
+}
+
+.timeline-marker {
+    position: absolute;
+    top: 5px;
+    left: calc(-2rem - 9px);
+    width: 15px;
+    height: 15px;
+    border-radius: 50%;
+    background-color: var(--color-fourth);
+    border: 3px solid var(--bg-secondary);
+}
+
+.job-title {
+    font-size: 1.4rem;
+    margin-bottom: 0.2rem;
+    color: var(--color-text);
+}
+
+.company-date {
+    font-weight: var(--font-bold);
+    color: var(--color-fourth);
+    font-size: 0.95rem;
+    margin-bottom: 0.8rem;
+}
+
+.job-description {
+    font-size: 1rem;
+    opacity: 0.9;
+}
+
+/* ==========================================
+   PERSONAL PROJECTS SECTION
+   ========================================== */
+.projects-grid {
+    display: grid;
+    /* Default: 4 columns for tablets and horizontal screens */
+    grid-template-columns: repeat(4, 1fr);
+    gap: 1.5rem;
+}
+
+.project-card {
+    background-color: var(--bg-secondary);
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+    display: flex;
+    flex-direction: column;
+    transition: transform var(--transition-speed) ease;
+}
+
+.project-card:hover {
+    transform: translateY(-5px);
+}
+
+.card-image-placeholder {
+    width: 100%;
+    height: 180px;
+    background-color: var(--color-tertiary);
+    border-bottom: 2px solid var(--color-fourth);
+}
+
+.card-content {
+    padding: 1.5rem;
+    display: flex;
+    flex-direction: column;
+    flex-grow: 1;
+}
+
+.card-title {
+    font-size: 1.25rem;
+    margin-bottom: 0.75rem;
+    color: var(--color-text);
+}
+
+.card-text {
+    font-size: 0.9rem;
+    opacity: 0.9;
+}
+
+/* ==========================================
+   CONTACT ME SECTION
+   ========================================== */
+.contact-container {
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.contact-line {
+    margin-top: 1rem;
+}
+
+.email-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.75rem;
+    font-weight: var(--font-bold);
+    font-size: 1.5rem;
+    transition: color var(--transition-speed) ease-in-out;
+}
+
+.email-link .mail-icon {
+    font-size: 2rem;
+    transition: color var(--transition-speed) ease-in-out;
+}
+
+.email-link:hover,
+.email-link:hover .mail-icon {
+    color: var(--color-tertiary);
+}
+
+/* ==========================================
+   FOOTER
+   ========================================== */
+.footer {
+    background-color: #12191d;
+    padding: 2rem;
+    text-align: center;
+    font-size: 0.9rem;
+    opacity: 0.8;
+    border-top: 1px solid var(--bg-secondary);
+}
+
+/* ==========================================
+   RESPONSIVE DESIGN BREAKPOINTS
+   ========================================== */
+
+/* Compact Laptops & Small Horizontal Screens (3 Columns Grid) */
+@media screen and (max-width: 1100px) {
+    .projects-grid {
+        grid-template-columns: repeat(3, 1fr);
+    }
+}
+
+/* Tablets & Small Screens (2 Columns Grid) */
+@media screen and (max-width: 850px) {
+    .projects-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+    .about-grid {
+        gap: 1.5rem;
+    }
+}
+
+/* ------------------------------------------
+   VERTICAL SMARTPHONES (Portrait Mode)
+   ------------------------------------------ */
+@media screen and (max-width: 768px) and (orientation: portrait){
+    
+    body { padding-bottom: calc(var(--nav-height) + 1rem); }
+    
+    .nav-indicator {
+        top: 0; /* Move to top of buttons */
+        bottom: auto;
+        left: 0;
+        height: 3px;
+        width: 100px; /* JS will override this */
+    }
+    
+    /* Navbar shifts to the BOTTOM */
+    .navbar {
+        position: fixed;
+        top: auto;
+        bottom: 0;
+        height: var(--nav-height);
+        box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.4);
+    }
+
+    .nav-container {
+        gap: 0.5rem;
+        justify-content: space-around;
+    }
+
+    .nav-link {
+        flex-direction: column;
+        gap: 0.2rem;
+        padding: 0.4rem 0.2rem;
+        font-size: 0.75rem;
+        text-align: center;
+    }
+
+    .nav-indicator {
+        top: 0; /* Move to top of buttons */
+        bottom: auto;
+        left: 0;
+        height: 3px;
+        width: 100px; /* JS will override this */
+    }
+
+    .nav-link .material-symbols-outlined {
+        font-size: 1.3rem;
+    }
+
+    /* Prevent content from being hidden behind the bottom fixed navbar */
+    .main-content {
+        padding-bottom: var(--nav-height);
+    }
+
+    /* About Me: Stack picture on top, text below */
+    .about-grid {
+        flex-direction: column;
+        text-align: center;
+    }
+
+    .about-avatar-col, 
+    .about-text-col {
+        flex: 1 1 100%;
+        width: 100%;
+    }
+
+    .avatar-circle {
+        max-width: 160px;
+        margin-bottom: 1rem;
+    }
+
+    /* Projects Grid: 1 column on vertical smartphones */
+    .projects-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .email-link {
+        font-size: 1.2rem;
+    }
+}
+
+/* ------------------------------------------
+   HORIZONTAL SMARTPHONES (Landscape Mode)
+   ------------------------------------------ */
+@media screen and (max-height: 550px) and (orientation: landscape),
+    screen and (max-width: 900px) and (orientation: landscape) {
+    
+    /* Navbar shifts to the RIGHT */
+    .navbar {
+        position: fixed;
+        top: 0;
+        left: auto;
+        right: 0;
+        width: var(--nav-width-landscape);
+        height: 100vh;
+        flex-direction: column;
+        box-shadow: -2px 0 10px rgba(0, 0, 0, 0.4);
+    }
+
+    .nav-container {
+        flex-direction: column;
+        gap: 1.5rem;
+        padding: 1rem 0;
+        height: 100%;
+        justify-content: center;
+    }
+
+    .nav-link {
+        flex-direction: column;
+        gap: 0.25rem;
+        padding: 0.5rem;
+        font-size: 0.7rem;
+        text-align: center;
+        width: 100%;
+    }
+
+    .nav-link .material-symbols-outlined {
+        font-size: 1.4rem;
+    }
+
+    .nav-indicator {
+        left: 0;
+        top: 0;
+        width: 3px; /* Vertical line thickness */
+        height: 50px; /* JS will override this */
+    }
+
+    /* Prevent content from being hidden behind the right fixed navbar */
+    .main-content,
+    .footer {
+        padding-right: var(--nav-width-landscape);
+    }
+
+    /* About Me: Stack picture on top, text below */
+    .about-grid {
+        flex-direction: column;
+        text-align: center;
+    }
+
+    .about-avatar-col, 
+    .about-text-col {
+        flex: 1 1 100%;
+        width: 100%;
+    }
+
+    .avatar-circle {
+        max-width: 160px;
+        margin-bottom: 1rem;
+    }
+
+    /* Reduce projects grid to 2 columns to fit vertical viewport constraints cleanly */
+    .projects-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
