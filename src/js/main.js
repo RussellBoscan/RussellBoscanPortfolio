@@ -11,9 +11,10 @@
 const moveIndicator = (targetLink) => {
     const indicator = document.querySelector('.nav-indicator');
     const navContainer = document.querySelector('.nav-container');
+    if (!targetLink || !indicator || !navContainer) return;
 
-    // Abort if essential navigation elements are missing
-    if (!navLinks.length || !sections.length) return;
+    // Detect if we are in a vertical layout (Right Navbar)
+    const isVertical = window.getComputedStyle(navContainer).flexDirection === 'column';
 
     if (isVertical) {
         indicator.style.height = `${targetLink.offsetHeight}px`;
