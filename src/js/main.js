@@ -1,27 +1,13 @@
 /**
- * Main JavaScript Module (ECMAScript 2026 Standard)
- * Handles frictionless navigation and automatic scroll-spy highlighting
- * using high-performance IntersectionObserver and sliding indicator.
+ * Navbar scroll-spy + sliding indicator.
+ *
+ * Expects:
+ *   - <main> containing <section id="..."> elements
+ *   - .nav-link elements with data-section="<section id>"
+ *   - .nav-container and .nav-indicator elements (same markup as before)
  */
 
-// Initialize when DOM is fully loaded
-document.addEventListener('DOMContentLoaded', () => {
-    initScrollSpy();
-    
-    // Position indicator on page load
-    const initialActive = document.querySelector('.nav-link.active');
-    moveIndicator(initialActive);
-});
-
-// Re-align indicator if the user resizes their browser window
-window.addEventListener('resize', () => {
-    const currentActive = document.querySelector('.nav-link.active');
-    moveIndicator(currentActive);
-});
-
-/**
- * Moves the indicator and dynamically adjusts for layout orientation
- */
+// Moves the indicator and adjusts for layout orientation (unchanged)
 const moveIndicator = (targetLink) => {
     const indicator = document.querySelector('.nav-indicator');
     const navContainer = document.querySelector('.nav-container');
@@ -31,75 +17,87 @@ const moveIndicator = (targetLink) => {
     const isVertical = window.getComputedStyle(navContainer).flexDirection === 'column';
 
     if (isVertical) {
-        // Vertical mode: Animate vertical axis
         indicator.style.height = `${targetLink.offsetHeight}px`;
         indicator.style.top = `${targetLink.offsetTop}px`;
         indicator.style.width = '3px';
         indicator.style.left = '0';
     } else {
-        // Horizontal mode: Animate horizontal axis
         indicator.style.width = `${targetLink.offsetWidth}px`;
         indicator.style.left = `${targetLink.offsetLeft}px`;
         indicator.style.height = '3px';
-        
-        // Handle Portrait Mobile (top) vs Desktop (bottom)
+
+        // Portrait mobile (top) vs desktop (bottom)
         const isPortraitMobile = window.innerWidth <= 768 && window.innerHeight > window.innerWidth;
         indicator.style.top = isPortraitMobile ? '0' : 'auto';
         indicator.style.bottom = isPortraitMobile ? 'auto' : '0';
     }
 };
 
-/**
- * Sets up the IntersectionObserver to track visible sections
- * and dynamically apply the 'active' styling to navbar buttons.
- */
 const initScrollSpy = () => {
-    const sections = document.querySelectorAll('main section');
-    const navLinks = document.querySelectorAll('.nav-link');
+    const sections = [...document.querySelectorAll('main section[id]')];
+    const links = [...document.querySelectorAll('.nav-link')];
+    if (!sections.length || !links.length) return;
 
-    // Guard clause if elements are not present in the DOM
-    if (!sections.length || !navLinks.length) return;
+    // A section becomes active once its top edge passes this line,
+    // measured as a fraction of the viewport height from the top.
+    // Higher = switches sooner while scrolling down, lower = later.
+    const TRIGGER = 0.4;
 
-    // Configuration for observer: triggers when 40% of a section is visible
-    const observerOptions = {
-        root: null,
-        rootMargin: '0px',
-        threshold: 0.4
+    let activeId = null;
+    let frameQueued = false;
+
+    // Pure function of the current scroll position: same position, same answer,
+    // regardless of scroll speed, direction, or section height.
+    const getCurrentSectionId = () => {
+        // A short last section may never reach the trigger line,
+        // so once the page can't scroll any further, the last section wins.
+        const atBottom =
+            window.scrollY > 0 &&
+            window.scrollY + window.innerHeight >= document.documentElement.scrollHeight - 2;
+        if (atBottom) return sections[sections.length - 1].id;
+
+        const line = window.innerHeight * TRIGGER;
+        let current = sections[0];
+        for (const section of sections) {
+            if (section.getBoundingClientRect().top <= line) current = section;
+        }
+        return current.id;
     };
 
-    const sectionObserver = new IntersectionObserver((entries) => {
-        entries.forEach((entry) => {
-            if (entry.isIntersecting) {
-                const currentSectionId = entry.target.getAttribute('id');
-                updateActiveNavLink(currentSectionId, navLinks);
+    const update = (force = false) => {
+        const id = getCurrentSectionId();
+        if (id === activeId && !force) return; // nothing changed, skip DOM work
+        activeId = id;
+
+        let activeLink = null;
+        links.forEach((link) => {
+            const isActive = link.dataset.section === id;
+            link.classList.toggle('active', isActive);
+            if (isActive) {
+                link.setAttribute('aria-current', 'page');
+                activeLink = link;
+            } else {
+                link.removeAttribute('aria-current');
             }
         });
-    }, observerOptions);
+        moveIndicator(activeLink);
+    };
 
-    // Observe each section inside <main>
-    sections.forEach((section) => {
-        sectionObserver.observe(section);
-    });
+    // Throttle scroll handling to one check per animation frame
+    window.addEventListener('scroll', () => {
+        if (frameQueued) return;
+        frameQueued = true;
+        requestAnimationFrame(() => {
+            frameQueued = false;
+            update();
+        });
+    }, { passive: true });
+
+    // Layout changes move the sections and the links, so re-sync
+    window.addEventListener('resize', () => update(true));
+    window.addEventListener('load', () => update(true));
+
+    update(true); // initial state
 };
 
-/**
- * Updates the active state on navigation links based on current viewport section
- * @param {string} sectionId - The ID of the currently visible section
- * @param {NodeListOf<Element>} navLinks - List of navigation anchor elements
- */
-const updateActiveNavLink = (sectionId, navLinks) => {
-    navLinks.forEach((link) => {
-        const linkSection = link.getAttribute('data-section');
-        
-        if (linkSection === sectionId) {
-            link.classList.add('active');
-            link.setAttribute('aria-current', 'page');
-            
-            // NEW: Slide the indicator to this newly active link!
-            moveIndicator(link);
-        } else {
-            link.classList.remove('active');
-            link.removeAttribute('aria-current');
-        }
-    });
-};
+document.addEventListener('DOMContentLoaded', initScrollSpy);
