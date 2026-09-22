@@ -22,15 +22,13 @@
     --font-regular: 400;
     --font-bold: 700;
 
-    /* Layout & Transitions */
+    /* Navbar */
     --nav-height: 70px;
     --nav-width-landscape: 90px;
     --transition-speed: 0.25s;
 }
 
-/* ==========================================
-   RESET & GLOBAL STYLES
-   ========================================== */
+/* Global Styles */
 * {
     box-sizing: border-box;
     margin: 0;
@@ -38,7 +36,6 @@
 }
 
 html {
-    /* Preserves default scroll speed while enabling smooth anchor jumps */
     scroll-behavior: smooth;
 }
 
@@ -60,7 +57,6 @@ h1, h2, h3, h4 {
 a {
     color: inherit;
     text-decoration: none;
-    text-shadow: 0 0 10px rgba(255, 255, 255, 0.5); /* Subtle glow for better visibility on dark backgrounds */
 }
 
 /* ==========================================
@@ -123,9 +119,7 @@ a {
     transition: all var(--transition-speed) ease-in-out;
     pointer-events: none;
 }
-/* ==========================================
-   SECTIONS & LAYOUT
-   ========================================== */
+/* Sections and layout*/
 .section {
     padding: 5rem 2rem;
     min-height: 100vh;
@@ -154,9 +148,7 @@ a {
     position: relative;
 }
 
-/* ==========================================
-   ABOUT ME SECTION
-   ========================================== */
+/* About Section*/
 
 #about {
     --dot-bg: var(--bg-primary);
@@ -167,7 +159,7 @@ a {
     --dot-size: 1px;
     --dot-space: 22px;
 
-    /* The layered gradient pattern */
+    /* layered gradient pattern */
     background:
         linear-gradient(90deg, var(--dot-bg) calc(var(--dot-space) - var(--dot-size)), transparent 1%) center / var(--dot-space) var(--dot-space),
         linear-gradient(var(--dot-bg) calc(var(--dot-space) - var(--dot-size)), transparent 1%) center / var(--dot-space) var(--dot-space),
@@ -221,9 +213,7 @@ a {
     opacity: 0.95;
 }
 
-/* ==========================================
-   EXPERIENCE SECTION
-   ========================================== */
+/* Experience Section */
 
 .timeline {
     position: relative;
@@ -268,9 +258,7 @@ a {
     opacity: 0.9;
 }
 
-/* ==========================================
-   PERSONAL PROJECTS SECTION
-   ========================================== */
+/* Projects Sections*/
 .projects-grid {
     display: grid;
     /* Default: 4 columns for tablets and horizontal screens */
@@ -317,9 +305,7 @@ a {
     opacity: 0.9;
 }
 
-/* ==========================================
-   CONTACT ME SECTION
-   ========================================== */
+/* Contact Section */
 .contact-container {
     text-align: center;
     display: flex;
