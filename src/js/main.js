@@ -1,19 +1,10 @@
-/**
- * Navbar scroll-spy + sliding indicator.
- *
- * Expects:
- *   - <main> containing <section id="..."> elements
- *   - .nav-link elements with data-section="<section id>"
- *   - .nav-container and .nav-indicator elements (same markup as before)
- */
-
-// Moves the indicator and adjusts for layout orientation (unchanged)
+// Moves the indicator and adjusts for layout orientation
 const moveIndicator = (targetLink) => {
     const indicator = document.querySelector('.nav-indicator');
     const navContainer = document.querySelector('.nav-container');
     if (!targetLink || !indicator || !navContainer) return;
 
-    // Detect if we are in a vertical layout (Right Navbar)
+    // Detect if viewport is in a vertical layout (navbar to the right)
     const isVertical = window.getComputedStyle(navContainer).flexDirection === 'column';
 
     if (isVertical) {
@@ -46,11 +37,8 @@ const initScrollSpy = () => {
     let activeId = null;
     let frameQueued = false;
 
-    // Pure function of the current scroll position: same position, same answer,
-    // regardless of scroll speed, direction, or section height.
     const getCurrentSectionId = () => {
-        // A short last section may never reach the trigger line,
-        // so once the page can't scroll any further, the last section wins.
+        // If the section is too short, then check if more scroll, if not, then last section active
         const atBottom =
             window.scrollY > 0 &&
             window.scrollY + window.innerHeight >= document.documentElement.scrollHeight - 2;
@@ -93,11 +81,10 @@ const initScrollSpy = () => {
         });
     }, { passive: true });
 
-    // Layout changes move the sections and the links, so re-sync
     window.addEventListener('resize', () => update(true));
     window.addEventListener('load', () => update(true));
 
-    update(true); // initial state
+    update(true);
 };
 
 document.addEventListener('DOMContentLoaded', initScrollSpy);
