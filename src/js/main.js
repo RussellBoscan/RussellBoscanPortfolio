@@ -87,4 +87,46 @@ const initScrollSpy = () => {
     update(true);
 };
 
+const copyButton = document.querySelector('.copy-button');
+const textElement = document.getElementById('copyText');
+const wrapper = document.querySelector('.copy-wrapper');
+
+copyButton.addEventListener('click', async () => {
+  const textToCopy = textElement.textContent.trim();
+
+  try {
+    // Copy text to clipboard
+    await navigator.clipboard.writeText(textToCopy);
+
+    // 2. Show floating feedback
+    showCopyFeedback(wrapper);
+  } catch (err) {
+    console.error('Failed to copy to clipboard:', err);
+  }
+});
+
+function showCopyFeedback(container) {
+  // Remove toast if user spams button
+  const existingFeedback = container.querySelector('.copy-feedback');
+  if (existingFeedback) {
+    existingFeedback.remove();
+  }
+
+  // Create feedback element with clipboard icon
+  const badge = document.createElement('div');
+  badge.className = 'copy-feedback';
+  badge.setAttribute('aria-hidden', 'true');
+  badge.innerHTML = `
+    <span class="material-symbols-outlined">content_paste</span>
+    <span>Copied!</span>
+  `;
+
+  container.appendChild(badge);
+
+  // Clean up from DOM after 1.25 seconds
+  setTimeout(() => {
+    badge.remove();
+  }, 1400);
+}
+
 document.addEventListener('DOMContentLoaded', initScrollSpy);
