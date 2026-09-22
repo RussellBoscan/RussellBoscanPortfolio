@@ -59,9 +59,7 @@ a {
     text-decoration: none;
 }
 
-/* ==========================================
-   NAVIGATION BAR (DEFAULT: TOP STICKY)
-   ========================================== */
+/* Navbar (default top sticky)*/
 .navbar {
     position: sticky;
     top: 0;
@@ -336,11 +334,9 @@ a {
     color: var(--color-tertiary);
 }
 
-/* ==========================================
-   FOOTER
-   ========================================== */
+/* Footer*/
 .footer {
-    background-color: #12191d;
+    background-color: var(--bg-primary);
     padding: 2rem;
     text-align: center;
     font-size: 0.9rem;
@@ -348,9 +344,7 @@ a {
     border-top: 1px solid var(--bg-secondary);
 }
 
-/* ==========================================
-   RESPONSIVE DESIGN BREAKPOINTS
-   ========================================== */
+/* Responsive breakpoints */
 
 /* Compact Laptops & Small Horizontal Screens (3 Columns Grid) */
 @media screen and (max-width: 1100px) {
@@ -359,7 +353,7 @@ a {
     }
 }
 
-/* Tablets & Small Screens (2 Columns Grid) */
+/* Tablets and Small Screens (2 Columns Grid) */
 @media screen and (max-width: 850px) {
     .projects-grid {
         grid-template-columns: repeat(2, 1fr);
@@ -369,9 +363,7 @@ a {
     }
 }
 
-/* ------------------------------------------
-   VERTICAL SMARTPHONES (Portrait Mode)
-   ------------------------------------------ */
+/* portrait mode*/
 @media screen and (max-width: 768px) and (orientation: portrait){
     
     body { padding-bottom: calc(var(--nav-height) + 1rem); }
@@ -384,7 +376,7 @@ a {
         width: 100px; /* JS will override this */
     }
     
-    /* Navbar shifts to the BOTTOM */
+    /* Navbar shifts to the bottom */
     .navbar {
         position: fixed;
         top: auto;
@@ -423,7 +415,7 @@ a {
         padding-bottom: var(--nav-height);
     }
 
-    /* About Me: Stack picture on top, text below */
+    /* About, picture on top, text below */
     .about-grid {
         flex-direction: column;
         text-align: center;
@@ -450,13 +442,11 @@ a {
     }
 }
 
-/* ------------------------------------------
-   HORIZONTAL SMARTPHONES (Landscape Mode)
-   ------------------------------------------ */
+/* Horizontal phones and tablets (landscape)*/
 @media screen and (max-height: 550px) and (orientation: landscape),
     screen and (max-width: 900px) and (orientation: landscape) {
     
-    /* Navbar shifts to the RIGHT */
+    /* Navbar shifts to the right */
     .navbar {
         position: fixed;
         top: 0;
@@ -502,7 +492,7 @@ a {
         padding-right: var(--nav-width-landscape);
     }
 
-    /* About Me: Stack picture on top, text below */
+    /* About, stack picture on top, text below */
     .about-grid {
         flex-direction: column;
         text-align: center;
@@ -519,7 +509,7 @@ a {
         margin-bottom: 1rem;
     }
 
-    /* Reduce projects grid to 2 columns to fit vertical viewport constraints cleanly */
+    /* Reduce projects grid to 2 columns to fit vertical viewport limits*/
     .projects-grid {
         grid-template-columns: repeat(2, 1fr);
     }
