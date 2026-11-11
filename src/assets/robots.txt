@@ -1,16 +1,7 @@
-<<<<<<< HEAD
 User-agent: Discordbot
 User-agent: Twitterbot
 User-agent: facebookexternalhit
 User-agent: LinkedInBot
 User-agent: WhatsApp
 User-agent: Slackbot
-=======
-User-agent: Discordbot
-User-agent: Twitterbot
-User-agent: facebookexternalhit
-User-agent: LinkedInBot
-User-agent: WhatsApp
-User-agent: Slackbot
->>>>>>> 19fa6c7403a252cf2a743a62041f85453f4a0a01
 Disallow: /img/
