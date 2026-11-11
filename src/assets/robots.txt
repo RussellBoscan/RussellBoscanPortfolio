@@ -1,0 +1,7 @@
+User-agent: Discordbot
+User-agent: Twitterbot
+User-agent: facebookexternalhit
+User-agent: LinkedInBot
+User-agent: WhatsApp
+User-agent: Slackbot
+Disallow: /img/
