@@ -70,6 +70,8 @@ a {
     backdrop-filter: blur(5px);
     z-index: 1000;
     box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+    transform: translate(var(--detail-nav-exit-x, 0), var(--detail-nav-exit-y, 0));
+    transition: transform 0.35s ease;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -105,6 +107,24 @@ a {
 .nav-link:hover,
 .nav-link:hover .material-symbols-outlined {
     color: var(--color-tertiary);
+}
+
+/* Prevent touch's emulated hover from sticking on a hybrid touchscreen laptop. */
+.nav-link.touch-activated:hover,
+.nav-link.touch-activated:hover .material-symbols-outlined {
+    color: inherit;
+}
+
+/* Keep a visible focus indicator for keyboard users, but not after a touch tap. */
+.nav-link:focus:not(:focus-visible) {
+    outline: none;
+}
+
+@media (hover: none) {
+    .nav-link:hover,
+    .nav-link:hover .material-symbols-outlined {
+        color: inherit;
+    }
 }
 
 /* Active Section Indicator (Default: Bottom Underline) */
@@ -155,42 +175,50 @@ a {
     
     /* Dot dimensions */
     --dot-size: 1px;
-    --dot-space: 22px;
+    --dot-space: 25px;
 
     /* layered gradient pattern */
     background:
-        linear-gradient(90deg, var(--dot-bg) calc(var(--dot-space) - var(--dot-size)), transparent 1%) center / var(--dot-space) var(--dot-space),
-        linear-gradient(var(--dot-bg) calc(var(--dot-space) - var(--dot-size)), transparent 1%) center / var(--dot-space) var(--dot-space),
+        linear-gradient(90deg, var(--dot-bg) calc(var(--dot-space) - var(--dot-size)), transparent 99%) center / var(--dot-space) var(--dot-space),
+        linear-gradient(var(--dot-bg) calc(var(--dot-space) - var(--dot-size)), transparent 99%) center / var(--dot-space) var(--dot-space),
         var(--dot-color);
 }
 
 .about-grid {
     display: flex;
     align-items: center;
-    gap: 3rem;
+    gap: 2rem;
 }
 
 .about-avatar-col {
-    flex: 0 0 25%;
+    flex: 0 0 30%;
     display: flex;
     justify-content: center;
 }
 
 .about-text-col {
-    flex: 0 0 75%;
+    flex: 0 0 75% 0;
+    padding: 2rem;
+    margin: 0 2rem 5rem 2rem;
+    border-radius: 25px;
+    background: rgba(255, 255, 255, 0);
+    box-shadow: 0 0 30px 6px rgba(0, 0, 0, 0.3);
+    backdrop-filter: blur(8px);
 }
 
 .avatar-circle {
     width: 100%;
-    max-width: 220px;
+    max-width: 264px;
     aspect-ratio: 1 / 1;
-    border-radius: 50%;
-    background-color: var(--color-tertiary);
-    border: 4px solid var(--color-fourth);
+    border: 3px solid color(from var(--bg-secondary) srgb r g b / 0.30);
     display: flex;
+    box-shadow: 0 0 30px 6px rgba(0, 0, 0, 0.3);
+    border-radius: 50%;
+    backdrop-filter: blur(5px);
+    z-index: 999;
     align-items: center;
     justify-content: center;
-    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+    margin-bottom: 5rem;
 }
 
 .avatar-icon {
@@ -242,6 +270,155 @@ a {
     font-size: 1.4rem;
     margin-bottom: 0.2rem;
     color: var(--color-text);
+}
+
+/* Job titles remain headings, with a full-size button for keyboard and pointer access. */
+.job-title-trigger {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
+    max-width: 100%;
+    padding: 0.1rem 0.35rem;
+    margin-left: -0.35rem;
+    border: 0;
+    border-radius: 6px;
+    background: transparent;
+    color: inherit;
+    font: inherit;
+    text-align: left;
+    cursor: pointer;
+    transition: var(--transition-speed) ease-in-out;
+}
+
+.job-title-trigger:hover,
+.job-title-trigger:focus-visible {
+    color: var(--color-tertiary);
+}
+
+.job-title-arrow {
+    flex: 0 0 auto;
+    font-size: 1.35rem;
+    line-height: 1;
+    transition: transform var(--transition-speed) ease-in-out;
+}
+
+.job-title-trigger:hover .job-title-arrow,
+.job-title-trigger:focus-visible .job-title-arrow {
+    transform: translateX(-3px);
+}
+
+.job-title-trigger:focus-visible {
+    box-shadow: 0 0 0 2px var(--color-fourth);
+}
+
+/* The modal layer is created by JavaScript and sits above all page content. */
+.job-detail-overlay {
+    position: fixed;
+    inset: 0;
+    z-index: 2000;
+    display: grid;
+    place-items: center;
+    padding: 1.25rem;
+    background: rgba(0, 0, 0, 0.72);
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.25s ease, visibility 0.25s ease;
+}
+
+.job-detail-overlay.is-open {
+    opacity: 1;
+    visibility: visible;
+}
+
+.job-detail-panel {
+    position: relative;
+    width: min(100%, 42rem);
+    max-height: 82vh;
+    max-height: min(82dvh, 52rem);
+    overflow-y: auto;
+    padding: clamp(1.5rem, 4vw, 2.5rem);
+    border: 1px solid rgba(255, 255, 255, 0.22);
+    border-radius: 25px;
+    background: rgba(255, 255, 255, 0.08);
+    box-shadow: 0 0 30px 6px rgba(0, 0, 0, 0.4);
+    backdrop-filter: blur(14px);
+    -webkit-backdrop-filter: blur(14px);
+    transform: translateY(12px) scale(0.985);
+    transition: transform 0.25s ease;
+    overscroll-behavior: contain;
+}
+
+.job-detail-overlay.is-open .job-detail-panel {
+    transform: translateY(0) scale(1);
+}
+
+.job-detail-back {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 2.75rem;
+    height: 2.75rem;
+    margin: 0 0 1.25rem -0.5rem;
+    border: 0;
+    border-radius: 50%;
+    background: transparent;
+    color: var(--color-text);
+    cursor: pointer;
+    transition: color var(--transition-speed) ease-in-out,
+        background-color var(--transition-speed) ease-in-out;
+}
+
+.job-detail-back:hover,
+.job-detail-back:focus-visible {
+    color: var(--color-tertiary);
+    background: rgba(255, 255, 255, 0.12);
+}
+
+.job-detail-back:focus-visible {
+    outline: 2px solid var(--color-fourth);
+    outline-offset: 2px;
+}
+
+.job-detail-back .material-symbols-outlined {
+    color: #fff;
+    font-size: 2rem;
+}
+
+.job-detail-title {
+    margin: 0 0 0.5rem;
+    font-size: clamp(1.55rem, 4vw, 2.15rem);
+    overflow-wrap: anywhere;
+}
+
+.job-detail-meta {
+    margin-bottom: 1.5rem;
+    color: var(--color-fourth);
+    font-weight: var(--font-bold);
+}
+
+.job-detail-summary,
+.job-detail-copy p {
+    font-size: 1rem;
+    line-height: 1.75;
+}
+
+.job-detail-copy p + p {
+    margin-top: 1rem;
+}
+
+body.job-detail-active {
+    overflow: hidden;
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .navbar,
+    .job-title-trigger,
+    .job-title-arrow,
+    .job-detail-overlay,
+    .job-detail-panel,
+    .job-detail-back {
+        transition-duration: 0.01ms;
+    }
 }
 
 .company-date {
@@ -311,87 +488,142 @@ a {
     align-items: center;
 }
 
-.contact-line {
-    margin-top: 1rem;
+#contact {
+    justify-content: flex-start;
+    padding-top: 6rem;
 }
 
-.copy-wrapper {
+.contact-line {
+    margin-top: 1rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 2rem;
+}
+
+.email-container {
   position: relative;
   display: inline-flex;
   align-items: center;
 }
 
-/* Floating feedback badge */
-.copy-feedback {
-  background: var(--color-tertiary);
-  color: #fff;
-  padding: 4px 8px;
-  border-radius: 6px;
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
-  animation: floatFade 1.25s ease-out forwards;
-
-  position: absolute;
-  left: 100%; /*Places it to the right */
-  top: 50%;
-  transform: translateY(-50%);
-  margin-left: 10px;
-  display: inline-flex;
-  align-items: center;
-  gap: 4px;
-  
-  /* Not interactive */
-  pointer-events: none;
-  user-select: none;
-  z-index: 1000;
-}
-
-.copy-feedback .material-symbols-outlined {
-  font-size: 16px;
-}
-
-/* Float upward slightly while fading out */
-@keyframes floatFade {
-  0% {
-    opacity: 0;
-    transform: translateY(-30%);
-  }
-  15% {
-    opacity: 1;
-    transform: translateY(-50%);
-  }
-  75% {
-    opacity: 1;
-    transform: translateY(-50%);
-  }
-  100% {
-    opacity: 0;
-    transform: translateY(-70%);
-  }
-}
-
-.email-button {
+.email-field {
     display: inline-flex;
     align-items: center;
     gap: 0.75rem;
-    background-color: var(--bg-secondary);
+    background-color: transparent;
     color: var(--color-text);
-    border: none;
-    border-radius: 6px;
-    padding: 0.75rem 1.5rem;
+    border: solid 2px var(--color-text);
+    border-radius: 10px;
+    padding: 1rem;
     cursor: pointer;
     font-weight: var(--font-bold);
-    font-size: 1.5rem;
-    transition: color var(--transition-speed) ease-in-out;
+    transition: var(--transition-speed) ease-in-out;
+    font-size: 1rem;
 }
 
-.email-button .mail-icon {
-    font-size: 2rem;
-    transition: color var(--transition-speed) ease-in-out;
+/* Use one type scale and font across the contact controls. */
+.email-field,
+.social-link {
+    font-family: var(--font-main);
+    font-size: 1rem;
+    font-weight: var(--font-bold);
+    line-height: 1.5;
 }
 
-.email-button:hover,
-.email-button:hover .mail-icon {
-    color: var(--color-tertiary);
+.social-link {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.75rem;
+    min-width: 7rem;
+    padding: 1rem;
+    border: 2px solid var(--color-text);
+    border-radius: 10px;
+    background: transparent;
+    color: var(--color-text);
+    transition: color var(--transition-speed) ease-in-out,
+        background-color var(--transition-speed) ease-in-out;
+}
+
+.social-icon {
+    display: block;
+    width: 1.5rem;
+    height: 1.5rem;
+    fill: currentColor;
+    flex: 0 0 auto;
+}
+
+.social-link:hover,
+.social-link:focus-visible {
+    color: var(--bg-primary);
+    background-color: var(--color-text);
+}
+
+.social-link:focus-visible {
+    outline: 2px solid var(--color-fourth);
+    outline-offset: 3px;
+}
+
+.email-field:hover,
+.email-field:focus-visible {
+    color: var(--bg-primary);
+    background-color: var(--color-text);
+}
+
+.email-field:focus-visible {
+    outline: 2px solid var(--color-fourth);
+    outline-offset: 3px;
+}
+
+/* Copy confirmation popup */
+.copy-feedback {
+    position: absolute;
+    left: 100%;
+    top: 50%;
+    transform: translate(-12px, -50%);
+    padding: 0.4rem 0.7rem;
+    border-radius: 6px;
+    background: #fff;
+    color: #000;
+    box-shadow: 0 5px 8px rgba(0, 0, 0, 0.25);
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
+    opacity: 0;
+    visibility: hidden;
+    pointer-events: none;
+    white-space: nowrap;
+    z-index: 1000;
+}
+
+.copy-feedback.show {
+    visibility: visible;
+    animation: copyFeedback 1.8s ease-in-out forwards;
+}
+
+.copy-feedback-arrow {
+    color: #000;
+    font-size: 1.25rem;
+}
+
+@keyframes copyFeedback {
+  0% {
+    opacity: 0;
+    transform: translate(-12px, -50%);
+  }
+  18% {
+    opacity: 1;
+    transform: translate(8px, -50%);
+  }
+  78% {
+    opacity: 1;
+    transform: translate(8px, -50%);
+  }
+  100% {
+    opacity: 0;
+    transform: translate(-12px, -50%);
+  }
 }
 
 /* Footer*/
@@ -564,7 +796,7 @@ a {
     }
 
     .avatar-circle {
-        max-width: 160px;
+        max-width: 248px;
         margin-bottom: 1rem;
     }
 
