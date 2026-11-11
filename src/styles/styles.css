@@ -716,6 +716,12 @@ body.job-detail-active {
     .about-text-col {
         flex: 1 1 100%;
         width: 100%;
+        min-width: 0;
+    }
+
+    /* The desktop card margins plus a 100% mobile width caused page overflow. */
+    .about-text-col {
+        margin: 0;
     }
 
     .avatar-circle {
