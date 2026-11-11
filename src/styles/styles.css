@@ -37,6 +37,8 @@
 
 html {
     scroll-behavior: smooth;
+    -webkit-text-size-adjust: 100%;
+    text-size-adjust: 100%;
 }
 
 body {
@@ -45,7 +47,6 @@ body {
     color: var(--color-text);
     background-color: var(--bg-primary);
     line-height: 1.6;
-    overflow-x: hidden;
 }
 
 h1, h2, h3, h4 {
@@ -141,6 +142,7 @@ a {
 .section {
     padding: 5rem 2rem;
     min-height: 100vh;
+    min-height: 100svh;
     display: flex;
     flex-direction: column;
     justify-content: center;
@@ -156,12 +158,14 @@ a {
 
 .section-container {
     max-width: 1200px;
+    min-width: 0;
     margin: 0 auto;
     width: 100%;
 }
 
 .section-title {
-    font-size: 2.5rem;
+    font-size: clamp(2rem, 5vw, 2.5rem);
+    overflow-wrap: anywhere;
     margin-bottom: 2rem;
     position: relative;
 }
@@ -197,7 +201,8 @@ a {
 }
 
 .about-text-col {
-    flex: 0 0 75% 0;
+    flex: 1 1 0;
+    min-width: 0;
     padding: 2rem;
     margin: 0 2rem 5rem 2rem;
     border-radius: 25px;
@@ -437,7 +442,7 @@ body.job-detail-active {
 .projects-grid {
     display: grid;
     /* Default: 4 columns for tablets and horizontal screens */
-    grid-template-columns: repeat(4, 1fr);
+    grid-template-columns: repeat(4, minmax(0, 1fr));
     gap: 1.5rem;
 }
 
@@ -494,6 +499,7 @@ body.job-detail-active {
 }
 
 .contact-line {
+    max-width: 100%;
     margin-top: 1rem;
     display: flex;
     flex-direction: column;
@@ -502,12 +508,15 @@ body.job-detail-active {
 }
 
 .email-container {
+  max-width: 100%;
   position: relative;
   display: inline-flex;
   align-items: center;
 }
 
 .email-field {
+    max-width: 100%;
+    min-width: 0;
     display: inline-flex;
     align-items: center;
     gap: 0.75rem;
@@ -520,6 +529,15 @@ body.job-detail-active {
     font-weight: var(--font-bold);
     transition: var(--transition-speed) ease-in-out;
     font-size: 1rem;
+}
+
+.email-address {
+    min-width: 0;
+    overflow-wrap: anywhere;
+}
+
+.mail-icon {
+    flex: 0 0 auto;
 }
 
 /* Use one type scale and font across the contact controls. */
@@ -640,14 +658,14 @@ body.job-detail-active {
 /* Compact Laptops & Small Horizontal Screens (3 Columns Grid) */
 @media screen and (max-width: 1100px) {
     .projects-grid {
-        grid-template-columns: repeat(3, 1fr);
+        grid-template-columns: repeat(3, minmax(0, 1fr));
     }
 }
 
 /* Tablets and Small Screens (2 Columns Grid) */
 @media screen and (max-width: 850px) {
     .projects-grid {
-        grid-template-columns: repeat(2, 1fr);
+        grid-template-columns: repeat(2, minmax(0, 1fr));
     }
     .about-grid {
         gap: 1.5rem;
@@ -658,14 +676,6 @@ body.job-detail-active {
 @media screen and (max-width: 768px) and (orientation: portrait){
     
     body { padding-bottom: calc(var(--nav-height) + 1rem); }
-    
-    .nav-indicator {
-        top: 0; /* Move to top of buttons */
-        bottom: auto;
-        left: 0;
-        height: 3px;
-        width: 100px; /* JS will override this */
-    }
     
     /* Navbar shifts to the bottom */
     .navbar {
@@ -714,7 +724,7 @@ body.job-detail-active {
 
     .about-avatar-col, 
     .about-text-col {
-        flex: 1 1 100%;
+        flex: 0 1 auto;
         width: 100%;
         min-width: 0;
     }
@@ -734,9 +744,6 @@ body.job-detail-active {
         grid-template-columns: 1fr;
     }
 
-    .email-button {
-        font-size: 1.2rem;
-    }
 }
 
 /* Horizontal phones and tablets (landscape)*/
@@ -797,8 +804,13 @@ body.job-detail-active {
 
     .about-avatar-col, 
     .about-text-col {
-        flex: 1 1 100%;
+        flex: 0 1 auto;
         width: 100%;
+        min-width: 0;
+    }
+
+    .about-text-col {
+        margin: 0;
     }
 
     .avatar-circle {
@@ -808,6 +820,35 @@ body.job-detail-active {
 
     /* Reduce projects grid to 2 columns to fit vertical viewport limits*/
     .projects-grid {
-        grid-template-columns: repeat(2, 1fr);
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+}
+
+/* Keep phone content usable in either orientation without hiding overflow. */
+@media screen and (max-width: 768px),
+    screen and (max-height: 550px) and (orientation: landscape),
+    screen and (max-width: 900px) and (orientation: landscape) {
+    .section {
+        padding: 3rem 1rem;
+    }
+
+    .about-text-col {
+        padding: 1.25rem;
+    }
+
+    .timeline {
+        margin-left: 0.5rem;
+        padding-left: 1.25rem;
+    }
+
+    .timeline-marker {
+        left: calc(-1.25rem - 9px);
+    }
+
+    /* Keep copy confirmation inside the screen beside a full-width email. */
+    .copy-feedback {
+        left: auto;
+        right: 12px;
+        top: calc(100% + 0.75rem);
     }
 }
